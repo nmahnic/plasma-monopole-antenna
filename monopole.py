@@ -27,10 +27,10 @@ class Monopole:
 
 
     def rou(self, wp, v_col,w):
-        return (((wp**2)/((w)**2+(v_col)**2))*v_col*self.e_o)**-1
+        return (((wp**2)/((2*pi*w)**2+(v_col)**2))*v_col*self.e_o)**-1
 
     def kp(self, rou1, f):
-        return ((1-1j)/((2*rou1)/(2*pi*f*4*pi*10e-7))**0.5)
+        return ((1-1j)/((2*rou1)/(2*pi*f*4*pi*1e-7))**0.5)
 
     def Zint(self, k1, rou2, ro):
         return ((rou2*k1)/(2*pi*ro))*((self.besselFunc(0,k1*ro))/(self.besselFunc(1,k1*ro)))
@@ -39,7 +39,7 @@ class Monopole:
         return ((2*sin((w*l)/(6e8)))/((((w)/(3e8)))*sin((w*l)/(3e8))))
 
     def leff_f(self, f, l):
-        return ((2*sin((l*f*2*pi)/(6e8)))/((((f*2*pi)/(3e8)))*sin((f*2*pi*l)/(3e8))))
+        return ((2*sin((l*f*2*pi)/(6e8))**2)/((((f*2*pi)/(3e8)))*sin((f*2*pi*l)/(3e8))))
 
     def besselFunc(self, n, x):
         # print("bessel: ",n,x)

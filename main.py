@@ -86,15 +86,15 @@ class Main(Animation):
         )
         self.slider_frequency = tk.Scale(
                     self.window,
-                    label="Change Frequency",
-                    from_=30e6, 
-                    to=300e6,
-                    resolution=100000,
+                    label="Change Frequency [MHz]",
+                    from_=30, 
+                    to=300,
+                    resolution=1,
                     orient=tk.HORIZONTAL,
                     length=200,
                     command=self.slider_frequency_update
                 )
-        self.slider_frequency.set(152e6)
+        self.slider_frequency.set(152)
         self.slider_frequency.grid(
             row=15,
             column=3,
@@ -113,17 +113,17 @@ class Main(Animation):
         self.function_range = {
             "Rs" : {
                 "v_col": {
-                    "default": 500e6,
+                    "default": 500,
                     "from": 1,
-                    "to": 1000e6,
-                    "resolution": 1000,
+                    "to": 1000,
+                    "resolution": 10,
     
                 },
                 "wp": {
-                    "default": 61.779e9,
-                    "from": 60e8,
-                    "to": 100e9,
-                    "resolution": 100e3,
+                    "default": 61.779,
+                    "from": 6,
+                    "to": 100,
+                    "resolution": 0.1,
                 },
                 "l": {
                     "default": 450e-3,
@@ -168,7 +168,7 @@ class Main(Animation):
         line3, = self.ax.plot(self.freq, self.reactance, "or")
 
         self.ax.set_xlim(self.x1[0], self.x1[-1])
-        self.ax.set_ylim(0, 350)
+        self.ax.set_ylim(0, 100)
         self.ax.set_xlabel("freq")
         self.ax.set_ylabel("Impedance")
         self.ax.set_title("Impedance(freq)")
@@ -251,14 +251,14 @@ class Main(Animation):
 
         print(self.default_vals)
         self.zint = self.monopoleImpedance(
-            self.default_vals['v_col'],
-            self.default_vals['wp'],
+            self.default_vals['v_col']*1e6,
+            self.default_vals['wp']*1e9,
             self.default_vals['l'],
             self.default_vals['r']
             )
         self.leff = self.monopoleEffectivLength(
-            self.default_vals['v_col'],
-            self.default_vals['wp'],
+            self.default_vals['v_col']*1e6,
+            self.default_vals['wp']*1e9,
             self.default_vals['l'],
             self.default_vals['r']
             )
@@ -273,7 +273,7 @@ class Main(Animation):
         self._update_appearance()
 
     def slider_frequency_update(self, *event: tk.Event) -> None:
-        self.freq = self.slider_frequency.get()
+        self.freq = self.slider_frequency.get()*1e6
         print("HOLA FREQUENCY", self.freq)
 
         self.reactance = self.zint(self.freq).imag*self.leff(self.freq).real
@@ -292,8 +292,8 @@ class Main(Animation):
             print(i,": ",self.sliderslist[i].get())
         #print(tmplist)
         
-        self.zint = self.monopoleImpedance(tmplist[0], tmplist[1], tmplist[2], tmplist[3])
-        self.leff = self.monopoleEffectivLength(tmplist[0], tmplist[1], tmplist[2], tmplist[3])
+        self.zint = self.monopoleImpedance(tmplist[0]*1e6, tmplist[1]*1e9, tmplist[2], tmplist[3])
+        self.leff = self.monopoleEffectivLength(tmplist[0]*1e6, tmplist[1]*1e9, tmplist[2], tmplist[3])
 
         print("EQUAL1: ", self.zint(self.x1).real*self.leff (self.x1).real == self.y1)
         print("EQUAL2: ", self.zint(self.x1).imag*self.leff (self.x1).real == self.y2)
