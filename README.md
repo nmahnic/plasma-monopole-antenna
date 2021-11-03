@@ -1,6 +1,6 @@
 # Plasma Antenna geometry and physis parameters dependence
 
-<img src="https://github.com/nmahnic/plasma-monopole-antenna/blob/main/screenshot.jpeg />
+<img src="https://github.com/nmahnic/plasma-monopole-antenna/blob/main/screenshot.jpeg" />
 
 To run this program, first ensure that `python3` with the modules `tkinter`, `numpy`, `sympy`, and `matplotlib` 
 are installed on your computer. The first of these comes with Python. The other three can be installed with
