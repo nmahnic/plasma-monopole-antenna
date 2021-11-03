@@ -163,8 +163,8 @@ class Main(Animation):
         self.freq = 152e6
         self.reactance = self.zint(self.freq).imag*self.leff(self.freq).real
 
-        line, = self.ax.plot(self.x1, self.y1)
-        line2, = self.ax.plot(self.x2, self.y2)
+        line, = self.ax.plot(self.x1, self.y1, label="Resistance")
+        line2, = self.ax.plot(self.x2, self.y2, label="Reactance")
         line3, = self.ax.plot(self.freq, self.reactance, "or")
 
         self.ax.set_xlim(self.x1[0], self.x1[-1])
@@ -173,8 +173,11 @@ class Main(Animation):
         self.ax.set_ylabel("Impedance")
         self.ax.set_title("Impedance(freq)")
         self.ax.grid(True,which="both")
-        self.ax.axvline(x=152e6, ls='--')
+        self.ax.axvline(x=152e6, ls=':', c='g', label="Reference of 152MHz")
+        self.ax.axvline(x=141e6, ls=':', c='y', label="Reference of 141MHz")
         self.ax.set_xscale("log")
+
+        leg = self.ax.legend(loc='upper left')
 
         self.line = line
         self.line2 = line2
@@ -218,7 +221,7 @@ class Main(Animation):
         print("Lint = {:.4e}".format(self.reactance/(2*pi*self.freq)),"Hy")
         print("XLint = {:.4e}".format(self.reactance),"\u03A9")
         #print("Rint = {:.4e}".format(self.reactance),"\u03A9")
-        indText = "Inductance ={: .2e}".format(self.reactance)+" Hy"
+        indText = "Inductance ={: .2e}".format(self.reactance/(2*pi*self.freq))+" Hy"
         self.inductanceLabel.configure(text=indText)
 
         self.line.set_ydata(self.y1)
