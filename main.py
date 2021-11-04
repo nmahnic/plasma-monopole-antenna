@@ -197,7 +197,6 @@ class Main(Animation):
             print("wp=",wp," v_col=",v_col," l=",l,"ro=",ro)
             a = Monopole(wp,v_col,abc.x,ro,l)
             c = a.Zint(a.kp(a.rou(wp,v_col,abc.x),abc.x),a.rou(wp,v_col,abc.x),ro)
-            # b = a.leff(2*pi*abc.x,l)
             bessel = {'besselj': jv}
             libraries = [bessel, "numpy"]  
             return lambdify(abc.x, c, modules=libraries)
@@ -205,8 +204,7 @@ class Main(Animation):
     def monopoleEffectivLength(self, v_col, wp, l, ro):
             print("wp=",wp," v_col=",v_col," l=",l,"ro=",ro)
             a = Monopole(wp,v_col,abc.x,ro,l)
-            b = a.leff(2*pi*abc.x,a.l)
-            # b = a.leff(2*pi*abc.x,l)
+            b = a.leff()
             bessel = {'besselj': jv}
             libraries = [bessel, "numpy"]  
             return lambdify(abc.x, b, modules=libraries)
