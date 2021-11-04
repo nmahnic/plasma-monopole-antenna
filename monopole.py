@@ -36,7 +36,7 @@ class Monopole:
         return ((rou2*k1)/(2*pi*ro))*((self.besselFunc(0,k1*ro))/(self.besselFunc(1,k1*ro)))
 
     def leff(self, w, l):
-        return ((2*sin((w*l)/(6e8)))/((((w)/(3e8)))*sin((w*l)/(3e8))))
+        return ((2*sin((w*l)/(6e8))**2)/((((w)/(3e8)))*sin((w*l)/(3e8))))
 
     def leff_f(self, f, l):
         return ((2*sin((l*f*2*pi)/(6e8))**2)/((((f*2*pi)/(3e8)))*sin((f*2*pi*l)/(3e8))))
