@@ -1,4 +1,5 @@
 from scipy import pi
+import scipy.constants as cts
 from scipy.special import jv
 from sympy import abc, sin
 import sympy
@@ -8,7 +9,8 @@ from sympy.utilities.lambdify import lambdify
 import matplotlib.pyplot as plt
 
 class Monopole:
-    e_o = 8.85e-12
+    e_o = cts.epsilon_0
+    co = cts.c
 
     def __init__(self, wp, v_col, f, ro, l):
         self.wp = wp
@@ -25,14 +27,13 @@ class Monopole:
     def kp(self, rou1, f):
         return ((1-1j)/((2*rou1)/(2*pi*f*4*pi*1e-7))**0.5)
 
-    def Zint(self, k1, rou2, ro):
-        return ((rou2*k1)/(2*pi*ro))*((self.besselFunc(0,k1*ro))/(self.besselFunc(1,k1*ro)))
+    def Zint(self):
+        rou2 = self.rou(self.wp,self.v_col,self.f)
+        k1 = self.kp(rou2,self.f)
+        return ((rou2*k1)/(2*pi*self.ro))*((self.besselFunc(0,k1*self.ro))/(self.besselFunc(1,k1*self.ro)))
 
     def leff(self):
-        return ((2*sin((self.w*self.l)/(6e8))**2)/((((self.w)/(3e8)))*sin((self.w*self.l)/(3e8))))
-
-    def leff_f(self, f, l):
-        return ((2*sin((l*f*2*pi)/(6e8))**2)/((((f*2*pi)/(3e8)))*sin((f*2*pi*l)/(3e8))))
+        return ((2*sin((self.w*self.l)/(2*self.co))**2)/((((self.w)/(self.co)))*sin((self.w*self.l)/(self.co))))
 
     def besselFunc(self, n, x):
         # print("bessel: ",n,x)

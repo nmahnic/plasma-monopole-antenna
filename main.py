@@ -195,16 +195,14 @@ class Main(Animation):
     
     def monopoleImpedance(self, v_col, wp, l, ro):
             print("wp=",wp," v_col=",v_col," l=",l,"ro=",ro)
-            a = Monopole(wp,v_col,abc.x,ro,l)
-            c = a.Zint(a.kp(a.rou(wp,v_col,abc.x),abc.x),a.rou(wp,v_col,abc.x),ro)
+            c = Monopole(wp,v_col,abc.x,ro,l).Zint()
             bessel = {'besselj': jv}
             libraries = [bessel, "numpy"]  
             return lambdify(abc.x, c, modules=libraries)
 
     def monopoleEffectivLength(self, v_col, wp, l, ro):
             print("wp=",wp," v_col=",v_col," l=",l,"ro=",ro)
-            a = Monopole(wp,v_col,abc.x,ro,l)
-            b = a.leff()
+            b = Monopole(wp,v_col,abc.x,ro,l).leff()
             bessel = {'besselj': jv}
             libraries = [bessel, "numpy"]  
             return lambdify(abc.x, b, modules=libraries)
@@ -218,8 +216,8 @@ class Main(Animation):
         # print(self.y2)
         print("Lint = {:.4e}".format(self.reactance/(2*pi*self.freq)),"Hy")
         print("XLint = {:.4e}".format(self.reactance),"\u03A9")
-        #print("Rint = {:.4e}".format(self.reactance),"\u03A9")
-        indText = "Inductance ={: .2e}".format(self.reactance/(2*pi*self.freq))+" Hy"
+        print("Leff = {:.4e}".format(self.leff(self.freq).real))
+        indText = "Inductance ={: .4e}".format(self.reactance/(2*pi*self.freq))+" Hy"
         self.inductanceLabel.configure(text=indText)
 
         self.line.set_ydata(self.y1)
