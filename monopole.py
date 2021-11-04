@@ -18,13 +18,6 @@ class Monopole:
         self.ro = ro
         self.l = l
 
-    def Em(self, wp, v_col, w):
-        return (1 - (wp**2)/(w*-1j*v_col))
-
-
-    def Kv(self, wp, v_col, f, Ed, n):
-        return (((Ed*self.Em(wp,v_col,n*f))/(Ed+self.Em(wp,v_col, n*f)))**0.5)
-
 
     def rou(self, wp, v_col,w):
         return (((wp**2)/((2*pi*w)**2+(v_col)**2))*v_col*self.e_o)**-1
