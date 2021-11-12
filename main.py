@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from locate_mouse import in_bounds, locate_mouse
 
 from scipy import pi
+import scipy.constants as cts
 from scipy.special import jv
 from monopole import Monopole
 from sympy.utilities.lambdify import lambdify
@@ -96,7 +97,7 @@ class Main(Animation):
                 )
         self.slider_frequency.set(152)
         self.slider_frequency.grid(
-            row=15,
+            row=14,
             column=3,
             columnspan=2,
             sticky=tk.W + tk.E + tk.N,
@@ -104,7 +105,23 @@ class Main(Animation):
         )
         self.inductanceLabel = tk.Label(self.window)
         self.inductanceLabel.grid(
+                row=15,
+                column=3,
+                columnspan=1,
+                sticky=tk.W + tk.E + tk.S,
+                padx=(10, 10)
+        )
+        self.leffLabel = tk.Label(self.window)
+        self.leffLabel.grid(
                 row=16,
+                column=3,
+                columnspan=1,
+                sticky=tk.W + tk.E + tk.S,
+                padx=(10, 10)
+        )
+        self.conductanceLabel = tk.Label(self.window)
+        self.conductanceLabel.grid(
+                row=17,
                 column=3,
                 columnspan=1,
                 sticky=tk.W + tk.E + tk.S,
@@ -122,7 +139,7 @@ class Main(Animation):
                 "wp": {
                     "default": 61.779,
                     "from": 6,
-                    "to": 100,
+                    "to": 610,
                     "resolution": 0.1,
                 },
                 "l": {
@@ -162,6 +179,7 @@ class Main(Animation):
 
         self.freq = 152e6
         self.reactance = self.zint(self.freq).imag*self.leff(self.freq).real
+        self.conductivity = 500e6*cts.epsilon_0*61.779e9**2/((2*pi*self.freq)**2+(500e6)**2)
 
         line, = self.ax.plot(self.x1, self.y1, label="Resistance")
         line2, = self.ax.plot(self.x2, self.y2, label="Reactance")
@@ -174,7 +192,7 @@ class Main(Animation):
         self.ax.set_title("Impedance(freq)")
         self.ax.grid(True,which="both")
         self.ax.axvline(x=152e6, ls=':', c='g', label="Reference of 152MHz")
-        self.ax.axvline(x=141e6, ls=':', c='y', label="Reference of 141MHz")
+        self.ax.axvline(x=138e6, ls=':', c='y', label="Reference of 138MHz")
         self.ax.set_xscale("log")
 
         leg = self.ax.legend(loc='upper left')
@@ -219,6 +237,10 @@ class Main(Animation):
         print("Leff = {:.4e}".format(self.leff(self.freq).real))
         indText = "Inductance ={: .4e}".format(self.reactance/(2*pi*self.freq))+" Hy"
         self.inductanceLabel.configure(text=indText)
+        indText = "L eff ={: .4f}".format(self.leff(self.freq).real)+" m"
+        self.leffLabel.configure(text=indText)
+        indText = "Conductance ={: .4f}".format(self.conductivity)+"S/m "
+        self.conductanceLabel.configure(text=indText)
 
         self.line.set_ydata(self.y1)
         self.line2.set_ydata(self.y2)
@@ -265,6 +287,7 @@ class Main(Animation):
         self.y1 = self.zint(self.x1).real*self.leff(self.x1).real
         self.y2 = self.zint(self.x1).imag*self.leff(self.x1).real
         self.reactance = self.zint(self.freq).imag*self.leff(self.freq).real
+        self.conductivity = 500e6*cts.epsilon_0*61.779e9**2/((2*pi*self.freq)**2+(500e6)**2)
 
         self._update_appearance()
 
@@ -290,6 +313,7 @@ class Main(Animation):
         
         self.zint = self.monopoleImpedance(tmplist[0]*1e6, tmplist[1]*1e9, tmplist[2], tmplist[3])
         self.leff = self.monopoleEffectivLength(tmplist[0]*1e6, tmplist[1]*1e9, tmplist[2], tmplist[3])
+        self.conductivity = tmplist[0]*1e6*cts.epsilon_0*(tmplist[1]*1e9)**2/((2*pi*self.freq)**2+(tmplist[0]*1e6)**2)
 
         print("EQUAL1: ", self.zint(self.x1).real*self.leff (self.x1).real == self.y1)
         print("EQUAL2: ", self.zint(self.x1).imag*self.leff (self.x1).real == self.y2)
